@@ -14,10 +14,12 @@ var bio = {
 	"skills": ["Javascript", "Python", "AngularJS", "Django"],
 	"biopic": "images/fry.jpg",
 	"display": function () {
+		console.log("printing bio");
+
 		var name = HTMLheaderName.replace("%data%", this.name),
 			role = HTMLheaderRole.replace("%data%", this.role);
 
-		$("#header").prepend(role).prepend(name);
+		$("#header").prepend([name, role]);
 
 		for(contact in this.contacts) {
 			var HTMLcontact = HTMLcontactGeneric.replace("%contact%", contact).replace("%data%", this.contacts[contact]);
@@ -27,7 +29,7 @@ var bio = {
 
 		var biopic = HTMLbioPic.replace("%data%", this.biopic),
 			welcomeMsg = HTMLwelcomeMsg.replace("%data%", this.welcomeMessage);
-		$("#header").append(biopic).append(welcomeMsg);
+		$("#header").append([biopic, welcomeMsg]);
 
 		$("#header").append(HTMLskillsStart);
 
@@ -43,21 +45,46 @@ var education = {
 	{
 		"name": "Federal University of Rio de Janeiro",
 		"location": "Rio de Janeiro",
-		"degree": "",
-		"majors": "Electronic and Computing Engineering",
+		"degree": "BC",
+		"majors": ["Electronic and Computing Engineering"],
 		"dates": 2012,
 		"url": "http://www.poli.ufrj.br/graduacao_cursos_engenharia_eletronica_computacao.php"
 	}
 	],
-	"onlineCouses": [
+	"onlineCourses": [
 	{
 		"title": "JavaScript Basics",
 		"school": "Udacity",
-		"date": "2015",
+		"date": 2015,
 		"url": "https://www.udacity.com/course/ud804"
 	}
 	],
 	"display": function () {
+		console.log("printing education");
+
+		for(school in this.schools) {
+			$("#education").append(HTMLschoolStart);
+
+			var name = HTMLschoolName.replace("%data%", this.schools[school].name),
+				degree = HTMLschoolDegree.replace("%data%", this.schools[school].degree),
+				dates = HTMLschoolDates.replace("%data%", this.schools[school].dates),
+				_location = HTMLschoolLocation.replace("%data%", this.schools[school].location),
+				major = HTMLschoolMajor.replace("%data%", this.schools[school].majors.join(" - "));
+
+			$(".education-entry:last").append([name + degree, dates, _location, major]);
+		}
+
+		$("#education").append(HTMLonlineClasses);
+
+		for(onlineCourse in this.onlineCourses) {
+			$("#education").append(HTMLschoolStart);
+			var title = HTMLonlineTitle.replace("%data%", this.onlineCourses[onlineCourse].title),
+				school = HTMLonlineSchool.replace("%data%", this.onlineCourses[onlineCourse].school),
+				dates = HTMLonlineDates.replace("%data%", this.onlineCourses[onlineCourse].date),
+				url = HTMLonlineURL.replace("%data%", this.onlineCourses[onlineCourse].url);
+
+			$(".education-entry:last").append([title + school, dates, url]);
+		}
 
 	}
 };
@@ -86,7 +113,18 @@ var work = {
 			"description": "Developing web systems for the employer internal process, according to their requirements. PHP, MySql, HTML, CSS, Javascript."
 		}
 	],
-	"isplay": function () {
+	"display": function () {
+		console.log("printing work");
+
+		for(job in this.jobs) {
+			$("#workExperience").append(HTMLworkStart);
+			var employer = HTMLworkEmployer.replace("%data%", this.jobs[job].employer),
+				title = HTMLworkTitle.replace("%data%", this.jobs[job].title),
+				dates = HTMLworkDates.replace("%data%", this.jobs[job].dates),
+				description = HTMLworkDescription.replace("%data%", this.jobs[job].description);
+
+			$(".work-entry:last").append([employer + title, dates, description]);
+		}
 	}
 };
 
@@ -105,7 +143,28 @@ var projects = {
 		"images": []
 	}
 	],
-	"display": function () {}
+	"display": function () {
+		console.log("printing projects");
+
+		for(project in this.projects) {
+			$("#projects").append(HTMLprojectStart);
+			var title = HTMLprojectTitle.replace("%data%", this.projects[project].title),
+				dates = HTMLprojectDates.replace("%data%", this.projects[project].dates),
+				description = HTMLprojectDescription.replace("%data%", this.projects[project].description),
+				images = this.projects[project].images;
+
+			$(".project-entry:last").append([title, dates, description]);
+
+			for(img in images) {
+				var image = HTMLprojectImage.replace("%data%", images[img]);
+				$(".project-entry:last").append(image);
+			}
+		}
+	}
 };
 
-bio.display();
+$.each([bio, education, work, projects], function (index, obj) {
+	obj.display();
+});
+
+$("#mapDiv").append(googleMap);
