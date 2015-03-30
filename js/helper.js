@@ -154,6 +154,12 @@ function initializeMap() {
     var lon = placeData.geometry.location.lng();  // longitude from the place service
     var name = placeData.formatted_address;   // name of the place from the place service
     var bounds = window.mapBounds;            // current boundaries of the map window
+	var types = [
+		google.maps.MapTypeId.HYBRID,
+		google.maps.MapTypeId.ROADMAP,
+		google.maps.MapTypeId.SATELLITE,
+		google.maps.MapTypeId.TERRAIN
+	];
 
     // marker is an object with additional data about the pin for a single location
     var marker = new google.maps.Marker({
@@ -172,6 +178,17 @@ function initializeMap() {
     // hmmmm, I wonder what this is about...
     google.maps.event.addListener(marker, 'click', function() {
       // your code goes here!
+	  var type = types[Math.floor((Math.random() * 4))];
+
+	  map.setCenter(marker.getPosition());
+
+	  console.log("changing MapTypeId to: " + type);
+	  map.setMapTypeId(type);
+
+	  // random 12, 13, 14, 15, 16
+	  map.setZoom(Math.floor(Math.random() * (16-12) + 1) + 12);
+
+	  console.log(marker.getTitle());
     });
 
     // this is where the pin actually gets added to the map.
@@ -181,6 +198,7 @@ function initializeMap() {
     map.fitBounds(bounds);
     // center the map
     map.setCenter(bounds.getCenter());
+	map.setZoom(15);
   }
 
   /*

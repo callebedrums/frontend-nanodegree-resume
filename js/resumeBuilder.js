@@ -19,7 +19,7 @@ var bio = {
 		var name = HTMLheaderName.replace("%data%", this.name),
 			role = HTMLheaderRole.replace("%data%", this.role);
 
-		$("#header").prepend([name, role]);
+		$("#header").prepend([name, role, internationalizeButton]);
 
 		for(contact in this.contacts) {
 			var HTMLcontact = HTMLcontactGeneric.replace("%contact%", contact).replace("%data%", this.contacts[contact]);
@@ -161,6 +161,14 @@ var projects = {
 			}
 		}
 	}
+};
+
+var inName = function () {
+	var names = bio.name.split(" ");
+	names[0] = names[0][0].toUpperCase() + names[0].slice(1).toLowerCase();
+	names[1] = names[1].toUpperCase();
+
+	return names.join(" ");
 };
 
 $.each([bio, education, work, projects], function (index, obj) {
